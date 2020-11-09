@@ -1,6 +1,6 @@
 [Header],,,,,,,,,
 IEMFileVersion,4,,,,,,,,
-Investigator Name,ThatPi,,,,,,,,
+Investigator Name,ThatPi,,,,,,,,;
 Experiment Name,2020_032049,,,,,,,,
 Date,30.09.2020,,,,,,,,
 Workflow,GenerateFASTQ,,,,,,,,
