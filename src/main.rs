@@ -64,7 +64,7 @@ fn check_csv() -> Result<(), Box<dyn Error>> {
 fn main() {
 
     let version = "0.1";
-    println!("INFO: Welcome to Validate Samplesheet v{} by Colin Davenport", version);
+    println!("INFO: Welcome to Rusty Samplesheet v{} by Colin Davenport", version);
     println!("INFO: Prints error on using ; anywhere instead of comma");
     println!("INFO: Prints error on finding German Umlaut");
     println!("INFO: Prints error if number of fields are not correct");
