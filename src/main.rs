@@ -1,7 +1,7 @@
 extern crate csv;
 extern crate argparse;
 
-use argparse::{ArgumentParser, StoreTrue, Store};
+use argparse::{ArgumentParser, Store};
 use std::error::Error;
 use csv::Reader;
 //use csv::StringRecord;
@@ -12,6 +12,15 @@ use std::process;
 
 // Check a SampleSheet CSV file for multiple common lab errors. 
 // Does not check duplicate indices or similar.
+fn version() ->  String {
+    let version: String = str::to_string("0.22");
+    //0.21 - add args parsing
+    //0.20 - cross compile for Windows
+    //0.10 - first version
+    version
+} 
+
+
 
 fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
     let mut sample_id_count : u16 = 0;
@@ -38,13 +47,27 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                 break;
             }
 
-        //Exit on semicolon
-        if field.contains(";") {
-            println!("");
-            println!("ERROR: Semicolon ; illegal found, Only commas , should be used! Exiting. Field: {}", field);
-            println!("Line containing error: {:?}", record);
-            break;
-        }
+            //Exit on semicolon
+            if field.contains(";") {
+                println!("");
+                println!("ERROR: Semicolon ; illegal found, Only commas ',' should be used! Exiting. Field: {}", field);
+                println!("Line containing error: {:?}", record);
+                break;
+            }
+            //Exit on .
+            if field.contains(".") {
+                println!("");
+                println!("ERROR: Dot . is illegal but found, Only [A-Za-z][1-9] and '_', should be used! Exiting. Field: {}", field);
+                println!("Line containing error: {:?}", record);
+                break;
+            }
+            //Check lines with more than 3 speech marks
+            if field.contains("\"\"\"\"") {
+                println!("");
+                println!("ERROR: More than 3 double quotes found. Illegal. Exiting. Field: {}", field);
+                println!("Line containing error: {:?}", record);
+                break;
+            }                    
 
             // Check sample ID counts
             //assert!(field == "Sample_ID");
@@ -80,7 +103,6 @@ fn report_checks_as_info()  {
     println!("INFO: Prints error if number of fields are not correct");
     println!("INFO: Prints error Sample_ID is present twice, should be Sample_ID, Sample_Name");
     println!("INFO: Prints error if more than three speech marks on line");
-    println!("INFO: Prints error if Sample_ID is present twice, should be Sample_ID, Sample_Name");
 }
 
 
@@ -90,33 +112,26 @@ fn report_checks_as_info()  {
 
 fn main() {
 
-    let version = "0.21";
-    //0.21 - add args parsing
-    //0.20 - cross compile for Windows
-    //0.10 - first version
-
-    println!("INFO: Welcome to Rusty Samplesheet version {} by Colin Davenport", version);
+    let version = version();
+    println!("INFO: Welcome to Rusty Samplesheet version {} by Colin Davenport", &version);
     //report_checks_as_info();
-
-    //let _map: HashMap<u32, u32> = HashMap::new(); 
     
     ////////////////
     // Parse input arguments
 
     let mut input_file = "SampleSheet.csv".to_string();
-    let mut name = "horse".to_string();
     {  // this block limits scope of borrows by parser.refer() method
         let mut parser = ArgumentParser::new();
-        parser.refer(&mut name)
-            .add_option(&["--name"], Store,
-            "Name for the greeting");
-        parser.refer(&mut input_file);    
+        parser.refer(&mut input_file)
+            .add_option(&["-f", "--input_file"], Store,
+                    "Input file CSV");
+        //parser.refer(&mut input_file);    
         //parser.refer(&mut input_file)
         //    .add_option(&["-f", "--input_file"], Store,
         //                "Input file CSV");
         parser.parse_args_or_exit();
     } 
-    let mut input_csv: String = str::to_string(&name);
+    let mut input_csv: String = str::to_string(&input_file);
 
     ////////////////
     // Parse and check the CSV
