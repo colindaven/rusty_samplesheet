@@ -43,7 +43,7 @@ rustflags = "-C panic=abort"
 
 # run
 
-$ cargo rustc --target=i686-pc-windows-gnu --release -- -C link-args=-mwindows
+cargo rustc --target=i686-pc-windows-gnu --release -- -C link-args=-mwindows
 
 #You can build your crate easily with
 cargo build --target x86_64-pc-windows-gnu

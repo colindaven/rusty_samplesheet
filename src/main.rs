@@ -41,7 +41,7 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                 println!("");
                 println!("ERROR: Umlaut found, exiting. Field: {}", field);
                 println!("Line containing error: {:?}", record);
-                println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet")
+                println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
                 //let error_string = "ERROR: Umlaut found, exiting. Field: {}", field;
                 //let error_record = record.clone();
                 //print_errors(error_string, error_record);
@@ -53,7 +53,7 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                 println!("");
                 println!("ERROR: Semicolon ; illegal found, Only commas ',' should be used! Exiting. Field: {}", field);
                 println!("Line containing error: {:?}", record);
-                println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet")
+                println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
                 break;
             }
             //Exit on .
@@ -61,7 +61,7 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                 println!("");
                 println!("ERROR: Dot . is illegal but found, Only [A-Za-z][1-9] and '_', should be used! Exiting. Field: {}", field);
                 println!("Line containing error: {:?}", record);
-                println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet")
+                println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
                 break;
             }
             //Check lines with more than 3 speech marks
@@ -69,7 +69,7 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                 println!("");
                 println!("ERROR: More than 3 double quotes found. Illegal. Exiting. Field: {}", field);
                 println!("Line containing error: {:?}", record);
-                println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet")
+                println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
                 break;
             }                    
 
