@@ -23,6 +23,10 @@ Linux:
 
 ## Compile for Windowsm(Done on hpc03 internally)
 ´´´
+#first setup Ubuntus
+sudo apt update && sudo apt install mingw-w64
+
+# now setup rust
 rustup target add x86_64-pc-windows-gnu
 rustup toolchain install stable-x86_64-pc-windows-gnu
 #You can build your crate easily with
