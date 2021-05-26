@@ -80,6 +80,7 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                 }
             }
 
+            // TODO print columns with S762 and S512 + names and seqs. Check if doubled?
 
                 
         }
@@ -99,6 +100,7 @@ fn print_errors(bad_string: String, record: String){
 
 fn report_checks_as_info()  {
     println!("INFO: Prints error on using ; anywhere instead of comma");
+    println!("INFO: Prints error on using . anywhere instead of _");
     println!("INFO: Prints error on finding German Umlaut");
     println!("INFO: Prints error if number of fields are not correct");
     println!("INFO: Prints error Sample_ID is present twice, should be Sample_ID, Sample_Name");
