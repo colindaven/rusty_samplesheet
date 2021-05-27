@@ -35,8 +35,14 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
         let record = result?;
         //println!("{:?}", record);
 
-
+        //last_field = field;
         for field in record.iter() {
+
+            // Skip two Date fields, otherwise conflicts with . checking
+            if field.contains("Date"){
+                record.iter();
+                record.iter();
+            } 
 
             //Exit on Umlaut 
             if field.contains("ö") || field.contains("Ö") || field.contains("Ü") || field.contains("ü") || field.contains("ä") || field.contains("Ä") {
@@ -55,9 +61,8 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                 println!("Line containing error: {:?}", record);
                 println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
                 println!("");
-                break;
             }
-            //Exit on .
+            //Report Warning on ., but not if Date in the previous field (dots allowed for Date)
             if field.contains(".") {
                 println!("");
                 println!("WARNING: Dot . is illegal in non Date lines. Only [A-Za-z][1-9] and '_', should be used! Exiting. Field: {}", field);
@@ -72,7 +77,6 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                 println!("Line containing error: {:?}", record);
                 println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
                 println!("");
-                break;
             }                    
 
             // Check sample ID counts
@@ -90,7 +94,7 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
             }
 
             // TODO print columns eg with S762 and S512 + names and seqs. Check if doubled?
-
+            //last_field = &field;
                 
         }
 
