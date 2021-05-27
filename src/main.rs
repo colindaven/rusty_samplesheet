@@ -150,7 +150,9 @@ fn main() {
     // Parse and check the CSV
 
     if let Err(err) = check_csv(input_csv) {
-        println!("ERROR running check_csv: {}", err);
+        println!("");
+        println!("Summary: ");
+        println!("There were one or more errors while running check_csv: {}", err);
         println!("You can probably solve this by opening in Libreoffice or Excel and deleting the unused whitespace columns, then saving as CSV again.");
         process::exit(1);
     }
