@@ -83,7 +83,7 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                     println!("");
                     println!("ERROR: Sample_ID present more than once: {}, {}, {:?}", sample_id_count, field, record);
                     println!("Line containing error: {:?}", record);
-                    println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet")
+                    println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
                     println!("");
 
                 }
@@ -125,8 +125,8 @@ fn main() {
 
     let version = version();
     println!("INFO: Welcome to Rusty Samplesheet version {} by Colin Davenport", &version);
-    println!("Usage: Call your SampleSheet SampleSheet.csv in the same directory. Double click the .bat file to start.")
-    println!("Remember to use Wordpad or Notepad++ to read the output.txt file")
+    println!("Usage: Call your SampleSheet SampleSheet.csv in the same directory. Double click the .bat file to start.");
+    println!("Remember to use Wordpad or Notepad++ to read the output.txt file");
     //report_checks_as_info();
     
     ////////////////
