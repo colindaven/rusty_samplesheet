@@ -1,7 +1,7 @@
 [Header],,,,,,,,,
 IEMFileVersion,4,,,,,,,,
 Investigator Name,ThatPi,,,,,,,,;
-Experiment Name,2020_032049,,,,,,,,
+Experiment Name,A_really_bad_samplesheet_for_testing_2020_032049,,,,,,,,
 Date,30.09.2020,,,,,,,,
 Workflow,GenerateFASTQ,,,,,,,,
 Application,FASTQ Only,,,,,,,,
