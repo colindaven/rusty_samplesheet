@@ -89,7 +89,7 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                 }
             }
 
-            // TODO print columns with S762 and S512 + names and seqs. Check if doubled?
+            // TODO print columns eg with S762 and S512 + names and seqs. Check if doubled?
 
                 
         }
@@ -125,6 +125,8 @@ fn main() {
 
     let version = version();
     println!("INFO: Welcome to Rusty Samplesheet version {} by Colin Davenport", &version);
+    println!("Usage: Call your SampleSheet SampleSheet.csv in the same directory. Double click the .bat file to start.")
+    println!("Remember to use Wordpad or Notepad++ to read the output.txt file")
     //report_checks_as_info();
     
     ////////////////
