@@ -22,7 +22,7 @@ chmod a+x validate_samplesheet
 ./validate_samplesheet -f your_SampleSheet.csv
 ```
 
-## Compile for Windowsm(Done on hpc03 internally)
+## Compile for Windows (done on hpc03 internally)
 ```
 # first setup Ubuntu
 sudo apt update && sudo apt install mingw-w64
