@@ -13,11 +13,12 @@ rustup toolchain install stable-x86_64-pc-windows-gnu
 cargo build --target x86_64-pc-windows-gnu
 
 
-echo "####### Building on Linux ##########" 
+#echo "####### Building on Linux ##########" 
 
 ## Compile for Linux
-cargo build --target release
+#cargo build --target release
 
-cp target/x86_64-pc-windows-gnu/release/*.exe .
-cp target/release/validate_samplesheet .
+cp target/x86_64-pc-windows-gnu/debug/*.exe .
+#cp target/x86_64-pc-windows-gnu/release/*.exe .
+#cp target/release/validate_samplesheet .
 
