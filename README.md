@@ -22,11 +22,12 @@ chmod a+x validate_samplesheet
 ./validate_samplesheet -f your_SampleSheet.csv
 ```
 
-## Checks
-- . in sample IDs and names
+## Checks performed
+- No "." in sample IDs and names
 - German Umlaut äüö etc disallowed
-- Incorrect headers
+- Incorrect headers, eg Sample_ID present more than once
 - Incorrect adapters lines with more than three """ (should be something like "Index Adapters,""TruSeq DNA CD Indexes (96 Indexes)""" )
+- Semicolons ; used instead of commas , as delimiters
 
 ## Compile for Windows (done on hpc03 internally)
 ```
