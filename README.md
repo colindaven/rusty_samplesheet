@@ -12,8 +12,8 @@ A windows/linux program written in Rust
 
 ## Run it!
 Windows: 
-1. Call your SampleSheet SampleSheet.csv. 
-2. Double click the validate_samplesheet.bat
+1. Call your SampleSheet `SampleSheet.csv` (Windows, set this in the `validate_samplesheet.bat` if you like). 
+2. Double click the `validate_samplesheet.bat`
 3. Results will be printed in output.txt, open this with Wordpad or Notepad++ or another competent text editor.  
 
 Linux: 
@@ -21,6 +21,12 @@ Linux:
 chmod a+x validate_samplesheet
 ./validate_samplesheet -f your_SampleSheet.csv
 ```
+
+## Checks
+- . in sample IDs and names
+- German Umlaut äüö etc disallowed
+- Incorrect headers
+- Incorrect adapters lines with more than three """ (should be something like "Index Adapters,""TruSeq DNA CD Indexes (96 Indexes)""" )
 
 ## Compile for Windows (done on hpc03 internally)
 ```
