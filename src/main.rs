@@ -13,7 +13,9 @@ use std::process;
 // Check a SampleSheet CSV file for multiple common lab errors. 
 // Does not check duplicate indices or similar.
 fn version() ->  String {
-    let version: String = str::to_string("0.22");
+    let version: String = str::to_string("0.23");
+    //0.23 - improve error msgs, allow date to contain "."
+    //0.22 - add windows batch file
     //0.21 - add args parsing
     //0.20 - cross compile for Windows
     //0.10 - first version
@@ -42,9 +44,7 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                 println!("ERROR: Umlaut found, exiting. Field: {}", field);
                 println!("Line containing error: {:?}", record);
                 println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
-                //let error_string = "ERROR: Umlaut found, exiting. Field: {}", field;
-                //let error_record = record.clone();
-                //print_errors(error_string, error_record);
+                println!("");
                 break;
             }
 
@@ -54,15 +54,16 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                 println!("ERROR: Semicolon ; illegal found, Only commas ',' should be used! Exiting. Field: {}", field);
                 println!("Line containing error: {:?}", record);
                 println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
+                println!("");
                 break;
             }
             //Exit on .
             if field.contains(".") {
                 println!("");
-                println!("ERROR: Dot . is illegal but found, Only [A-Za-z][1-9] and '_', should be used! Exiting. Field: {}", field);
+                println!("WARNING: Dot . is illegal in non Date lines. Only [A-Za-z][1-9] and '_', should be used! Exiting. Field: {}", field);
                 println!("Line containing error: {:?}", record);
                 println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
-                break;
+        
             }
             //Check lines with more than 3 speech marks
             if field.contains("\"\"\"\"") {
@@ -70,6 +71,7 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                 println!("ERROR: More than 3 double quotes found. Illegal. Exiting. Field: {}", field);
                 println!("Line containing error: {:?}", record);
                 println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
+                println!("");
                 break;
             }                    
 
@@ -82,6 +84,8 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                     println!("ERROR: Sample_ID present more than once: {}, {}, {:?}", sample_id_count, field, record);
                     println!("Line containing error: {:?}", record);
                     println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet")
+                    println!("");
+
                 }
             }
 
