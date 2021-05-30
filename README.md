@@ -4,9 +4,9 @@ Very simple Illumina SampleSheet validation
 Help, my SampleSheet is a bit rusty, and by that I mean crap.
 
 A windows/linux program written in Rust
-- parse Illumina SampleSheet.csv in the directory
+- parse an Illumina SampleSheet.csv in the directory
 - complain about format problems in a (hopefully) biologist friendly fashion
-- link to examples showing proper samplesheets (internal MHH network only at present)
+- link to examples showing properly formatted SampleSheets (internal MHH network only at present)
 
 
 
