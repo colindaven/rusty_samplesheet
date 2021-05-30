@@ -23,7 +23,7 @@ chmod a+x validate_samplesheet
 ```
 
 ## Checks performed
-- No "." in sample IDs and names
+- No "." in sample IDs and names, allowed on lines containing Date
 - German Umlaut äüö etc disallowed
 - Incorrect headers, eg Sample_ID present more than once
 - Incorrect adapters lines with more than three """ (should be something like "Index Adapters,""TruSeq DNA CD Indexes (96 Indexes)""" )
