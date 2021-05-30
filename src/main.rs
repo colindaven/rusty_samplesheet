@@ -30,7 +30,7 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
     // Setup file and read
     //let mut rdr = Reader::from_path("SampleSheet_2020_032049.csv")?;
     let mut rdr = Reader::from_path(csv_file_string)?;
-    // Iterate through results.
+    // Iterate through results. Record is a StringRecord.
     for result in rdr.records() {
         let record = result?;
         //println!("{:?}", record);
@@ -38,11 +38,8 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
         //last_field = field;
         for field in record.iter() {
 
-            // Skip two Date fields, otherwise conflicts with . checking
-            if field.contains("Date"){
-                record.iter();
-                record.iter();
-            } 
+            // the whole line, all fields, as a string slice
+            let record_string = record.as_slice(); 
 
             //Exit on Umlaut 
             if field.contains("ö") || field.contains("Ö") || field.contains("Ü") || field.contains("ü") || field.contains("ä") || field.contains("Ä") {
@@ -62,8 +59,8 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
                 println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
                 println!("");
             }
-            //Report Warning on ., but not if Date in the previous field (dots allowed for Date)
-            if field.contains(".") {
+            //Report Warning on dot . , but not if Date in the same line (dots allowed for Date)
+            if field.contains(".") && !record_string.contains("Date") {
                 println!("");
                 println!("WARNING: Dot . is illegal in non Date lines. Only [A-Za-z][1-9] and '_', should be used! Exiting. Field: {}", field);
                 println!("Line containing error: {:?}", record);
