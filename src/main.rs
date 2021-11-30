@@ -55,10 +55,11 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
         for field in record.iter() {
 
             let fieldStr = field.to_string();
+
+            // Only read fields from SampleSheet after the Data field appears.
             if field.contains("[Data]"){
                 read_into_vectors = true;
             } 
-
             if read_into_vectors{
                 // parse columns to check for duplicates into vectors
                 if i == 0 {
