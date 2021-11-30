@@ -33,10 +33,10 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
     // Setup file and read
     //let mut rdr = Reader::from_path("SampleSheet_2020_032049.csv")?;
     let mut rdr = Reader::from_path(csv_file_string)?;
-    let mut sample_id_vec = Vec::new();
-    let mut sample_name_vec = Vec::new();
-    let mut index1_vec = Vec::new();
-    let mut index2_vec = Vec::new();
+    let mut sample_id_vec = Vec::<String>::new();
+    let mut sample_name_vec = Vec::<String>::new();
+    let mut index1_vec = Vec::<String>::new();
+    let mut index2_vec = Vec::<String>::new();
 
     let mut errors_found : u16 = 0;
 
@@ -81,8 +81,33 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
 
 
     }
+
+    check_vector_contents_unique(sample_id_vec);
+    //check_vector_contents_unique(sample_name_vec);
+    //check_vector_contents_unique(index1_vec);
+    //check_vector_contents_unique(index2_vec);
+
     Ok(())
 }
+
+
+fn check_vector_contents_unique(vector1: Vec<String>){
+
+    let mut sorted_vector = vector1.clone();
+    sorted_vector = sorted_vector.sort();
+    println!("Len: {} ", sorted_vector.len());
+
+    // a sorted vector has had all duplicates removed, so we can check by length. 
+    // if the sorted vector is shorter, then dups have been removed.
+    if sorted_vector.len() < vector1.len(){
+        println!("Duplicates were found in the following list!");
+        println!("{:?}",vector1);
+        for i in &vector1 {
+            println!("{}", i);
+        }
+    } 
+
+} 
 
 fn make_field_checks(field: String, record_string: String, mut errors_found: u16) -> u16 {
 
@@ -184,10 +209,7 @@ fn main() {
         parser.refer(&mut input_file)
             .add_option(&["-f", "--input_file"], Store,
                     "Input file CSV");
-        //parser.refer(&mut input_file);    
-        //parser.refer(&mut input_file)
-        //    .add_option(&["-f", "--input_file"], Store,
-        //                "Input file CSV");
+
         parser.parse_args_or_exit();
     } 
     let mut input_csv: String = str::to_string(&input_file);
