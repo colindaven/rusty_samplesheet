@@ -9,11 +9,15 @@ use csv::Reader;
 use std::process;
 //use std::str;
 
+//global vars
+static mut sample_id_count : u16 = 0;
+//static mut errors_found : u16 = 0;
 
 // Check a SampleSheet CSV file for multiple common lab errors. 
 // Does not check duplicate indices or similar.
 fn version() ->  String {
-    let version: String = str::to_string("0.23");
+    let version: String = str::to_string("0.24");
+    //0.24 - parse Sample_ID and Sample_Name fields. Check separately for duplication.
     //0.23 - improve error msgs, allow date to contain "."
     //0.22 - add windows batch file
     //0.21 - add args parsing
@@ -25,73 +29,53 @@ fn version() ->  String {
 
 
 fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
-    let mut sample_id_count : u16 = 0;
 
     // Setup file and read
     //let mut rdr = Reader::from_path("SampleSheet_2020_032049.csv")?;
     let mut rdr = Reader::from_path(csv_file_string)?;
+    let mut sample_id_vec = Vec::new();
+    let mut sample_name_vec = Vec::new();
+    let mut index1_vec = Vec::new();
+    let mut index2_vec = Vec::new();
+
+    let mut errors_found : u16 = 0;
+
     // Iterate through results. Record is a StringRecord.
     for result in rdr.records() {
         let record = result?;
         //println!("{:?}", record);
+        
+        // Setup field counter
+        let mut i = 0;
 
         //last_field = field;
         for field in record.iter() {
 
-            // the whole line, all fields, as a string slice
+            let fieldStr = field.to_string();
+            // parse columns to check for duplicates into vectors
+            if i == 0 {
+                sample_id_vec.push(fieldStr.clone());
+            } 
+            if i == 1 {
+                sample_name_vec.push(fieldStr.clone());
+            } 
+            if i == 5 {
+                index1_vec.push(fieldStr.clone());
+            } 
+            if i == 7 {
+                index2_vec.push(fieldStr.clone());
+            } 
+
+            // the whole line, all fields, as a string slice, then converted to String
             let record_string = record.as_slice(); 
+            let record_string2 = String::from(record_string);
 
-            //Exit on Umlaut 
-            if field.contains("ö") || field.contains("Ö") || field.contains("Ü") || field.contains("ü") || field.contains("ä") || field.contains("Ä") {
-                println!("");
-                println!("ERROR: Umlaut found, exiting. Field: {}", field);
-                println!("Line containing error: {:?}", record);
-                println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
-                println!("");
-                break;
-            }
-
-            //Exit on semicolon
-            if field.contains(";") {
-                println!("");
-                println!("ERROR: Semicolon ; illegal found, Only commas ',' should be used! Exiting. Field: {}", field);
-                println!("Line containing error: {:?}", record);
-                println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
-                println!("");
-            }
-            //Report Warning on dot . , but not if Date in the same line (dots allowed for Date)
-            if field.contains(".") && !record_string.contains("Date") {
-                println!("");
-                println!("WARNING: Dot . is illegal in non Date lines. Only [A-Za-z][1-9] and '_', should be used! Exiting. Field: {}", field);
-                println!("Line containing error: {:?}", record);
-                println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
-        
-            }
-            //Check lines with more than 3 speech marks
-            if field.contains("\"\"\"\"") {
-                println!("");
-                println!("ERROR: More than 3 double quotes found. Illegal. Exiting. Field: {}", field);
-                println!("Line containing error: {:?}", record);
-                println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
-                println!("");
-            }                    
-
-            // Check sample ID counts
-            //assert!(field == "Sample_ID");
-            if field == "Sample_ID" {
-                sample_id_count = sample_id_count +  1;
-                if sample_id_count > 1 {
-                    println!("");
-                    println!("ERROR: Sample_ID present more than once: {}, {}, {:?}", sample_id_count, field, record);
-                    println!("Line containing error: {:?}", record);
-                    println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
-                    println!("");
-
-                }
-            }
+            // Make detailed checks on each field
+            errors_found = make_field_checks(fieldStr, record_string2, errors_found);
 
             // TODO print columns eg with S762 and S512 + names and seqs. Check if doubled?
             //last_field = &field;
+            i = i + 1;
                 
         }
 
@@ -99,6 +83,65 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
+
+fn make_field_checks(field: String, record_string: String, mut errors_found: u16) -> u16 {
+
+    
+    //Exit on Umlaut 
+    if field.contains("ö") || field.contains("Ö") || field.contains("Ü") || field.contains("ü") || field.contains("ä") || field.contains("Ä") {
+        println!("");
+        println!("ERROR: Umlaut found, exiting. Field: {}", field);
+        println!("Line containing error: {:?}", record_string);
+        println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
+        println!("");
+        //break;
+        errors_found = errors_found + 1;
+    }
+
+    //Exit on semicolon
+    if field.contains(";") {
+        println!("");
+        println!("ERROR: Semicolon ; illegal found, Only commas ',' should be used! Exiting. Field: {}", field);
+        println!("Line containing error: {:?}", record_string);
+        println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
+        println!("");
+        errors_found = errors_found + 1;
+    }
+    //Report Warning on dot . , but not if Date in the same line (dots allowed for Date)
+    if field.contains(".") && !record_string.contains("Date") {
+        println!("");
+        println!("WARNING: Dot . is illegal in non Date lines. Only [A-Za-z][1-9] and '_', should be used! Exiting. Field: {}", field);
+        println!("Line containing error: {:?}", record_string);
+        println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
+        errors_found = errors_found + 1;
+    }
+    //Check lines with more than 3 speech marks
+    if field.contains("\"\"\"\"") {
+        println!("");
+        println!("ERROR: More than 3 double quotes found. Illegal. Exiting. Field: {}", field);
+        println!("Line containing error: {:?}", record_string);
+        println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
+        println!("");
+        errors_found = errors_found + 1;
+    }                    
+
+    // Check sample ID header counts. This checks the header only
+    //assert!(field == "Sample_ID");
+    if field == "Sample_ID" {
+        unsafe{ 
+            sample_id_count = sample_id_count +  1;
+            if sample_id_count > 1 {
+                println!("");
+                println!("ERROR: Sample_ID header present more than once: {}, {}, {:?}", sample_id_count, field, record_string);
+                println!("Line containing error: {:?}", record_string);
+                println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
+                println!("");
+                errors_found = errors_found + 1;
+            }
+        }
+    }
+    return errors_found
+} 
 
 fn print_errors(bad_string: String, record: String){
     println!("");
@@ -128,6 +171,8 @@ fn main() {
     println!("INFO: Welcome to Rusty Samplesheet version {} by Colin Davenport", &version);
     println!("Usage: Call your SampleSheet SampleSheet.csv in the same directory. Double click the .bat file to start.");
     println!("Remember to use Wordpad or Notepad++ to read the output.txt file");
+    println!("If this file appears empty, the tools didn't find any errors - good job!");
+    //println!("Errors found: {} ", errors_found);
     //report_checks_as_info();
     
     ////////////////
