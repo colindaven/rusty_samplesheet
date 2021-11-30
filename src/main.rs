@@ -39,6 +39,8 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
     let mut index2_vec = Vec::<String>::new();
 
     let mut errors_found : u16 = 0;
+    // Read only tabular data after field [Data] into array
+    let mut read_into_vectors : bool = false;
 
     // Iterate through results. Record is a StringRecord.
     for result in rdr.records() {
@@ -48,24 +50,31 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
         // Setup field counter
         let mut i = 0;
 
+
         //last_field = field;
         for field in record.iter() {
 
             let fieldStr = field.to_string();
-            // parse columns to check for duplicates into vectors
-            if i == 0 {
-                sample_id_vec.push(fieldStr.clone());
-            } 
-            if i == 1 {
-                sample_name_vec.push(fieldStr.clone());
-            } 
-            if i == 5 {
-                index1_vec.push(fieldStr.clone());
-            } 
-            if i == 7 {
-                index2_vec.push(fieldStr.clone());
+            if field.contains("[Data]"){
+                read_into_vectors = true;
             } 
 
+            if read_into_vectors{
+                // parse columns to check for duplicates into vectors
+                if i == 0 {
+                    sample_id_vec.push(fieldStr.clone());
+                } 
+                if i == 1 {
+                    sample_name_vec.push(fieldStr.clone());
+                } 
+                if i == 5 {
+                    index1_vec.push(fieldStr.clone());
+                } 
+                if i == 7 {
+                    index2_vec.push(fieldStr.clone());
+                } 
+            } 
+            
             // the whole line, all fields, as a string slice, then converted to String
             let record_string = record.as_slice(); 
             let record_string2 = String::from(record_string);
@@ -91,11 +100,18 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
 }
 
 
+
 fn check_vector_contents_unique(vector1: Vec<String>){
 
+
+    for i in &vector1 {
+        println!("{}", i);
+    }
+
+    //let mut sorted_vector = vector1.clone();
     let mut sorted_vector = vector1.clone();
-    sorted_vector = sorted_vector.sort();
-    println!("Len: {} ", sorted_vector.len());
+    //sorted_vector = sorted_vector.sort();
+    //println!("Len: {} ", sorted_vector.len());
 
     // a sorted vector has had all duplicates removed, so we can check by length. 
     // if the sorted vector is shorter, then dups have been removed.
@@ -103,7 +119,7 @@ fn check_vector_contents_unique(vector1: Vec<String>){
         println!("Duplicates were found in the following list!");
         println!("{:?}",vector1);
         for i in &vector1 {
-            println!("{}", i);
+            //println!("{}", i);
         }
     } 
 
