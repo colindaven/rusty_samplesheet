@@ -10,7 +10,7 @@ use std::process;
 //use std::str;
 
 //global vars
-static mut sample_id_count : u16 = 0;
+static mut SAMPLE_ID_COUNT : u16 = 0;
 //static mut errors_found : u16 = 0;
 
 // Check a SampleSheet CSV file for multiple common lab errors. 
@@ -33,14 +33,14 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
     // Setup file and read
     //let mut rdr = Reader::from_path("SampleSheet_2020_032049.csv")?;
     let mut rdr = Reader::from_path(csv_file_string)?;
-    let mut sample_id_vec = Vec::<String>::new();
-    let mut sample_name_vec = Vec::<String>::new();
-    let mut index1_vec = Vec::<String>::new();
-    let mut index2_vec = Vec::<String>::new();
+    let mut sample_id_hash = Vec::<String>::new();
+    let mut sample_name_hash = Vec::<String>::new();
+    let mut index1_hash = Vec::<String>::new();
+    let mut index2_hash = Vec::<String>::new();
 
     let mut errors_found : u16 = 0;
     // Read only tabular data after field [Data] into array
-    let mut read_into_vectors : bool = false;
+    let mut read_into_hashes : bool = false;
 
     // Iterate through results. Record is a StringRecord.
     for result in rdr.records() {
@@ -54,26 +54,48 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
         //last_field = field;
         for field in record.iter() {
 
-            let fieldStr = field.to_string();
+            let field_str = field.to_string();
 
             // Only read fields from SampleSheet after the Data field appears.
             if field.contains("[Data]"){
-                read_into_vectors = true;
+                read_into_hashes = true;
+                println!("Checking data section of SampleSheet. IDs, Names, Indices must be unique!");
+
             } 
-            if read_into_vectors{
-                // parse columns to check for duplicates into vectors
+            if read_into_hashes{
+                // parse columns to check for duplicates into hashes
                 if i == 0 {
-                    sample_id_vec.push(fieldStr.clone());
+                    if sample_id_hash.contains(&field_str) {
+                        println!("Duplicate string found!: {} ", field_str);
+                    }  
+                    else {
+                        sample_id_hash.push(field_str.clone());
+                    } 
                 } 
                 if i == 1 {
-                    sample_name_vec.push(fieldStr.clone());
+                    if sample_name_hash.contains(&field_str) {
+                        println!("Duplicate string found!: {} ", field_str);
+                    }  
+                    else {
+                        sample_name_hash.push(field_str.clone());
+                    } 
                 } 
                 if i == 5 {
-                    index1_vec.push(fieldStr.clone());
-                } 
+                    if index1_hash.contains(&field_str) {
+                        println!("Duplicate string found!: {} ", field_str);
+                    }  
+                    else {
+                        index1_hash.push(field_str.clone());
+                    } 
+                }                 
                 if i == 7 {
-                    index2_vec.push(fieldStr.clone());
-                } 
+                    if index2_hash.contains(&field_str) {
+                        println!("Duplicate string found!: {} ", field_str);
+                    }  
+                    else {
+                        index2_hash.push(field_str.clone());
+                    } 
+                }                
             } 
             
             // the whole line, all fields, as a string slice, then converted to String
@@ -81,10 +103,8 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
             let record_string2 = String::from(record_string);
 
             // Make detailed checks on each field
-            errors_found = make_field_checks(fieldStr, record_string2, errors_found);
+            errors_found = make_field_checks(field_str, record_string2, errors_found);
 
-            // TODO print columns eg with S762 and S512 + names and seqs. Check if doubled?
-            //last_field = &field;
             i = i + 1;
                 
         }
@@ -92,7 +112,7 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
 
     }
 
-    check_vector_contents_unique(sample_id_vec);
+    //check_vector_contents_unique(sample_id_vec);
     //check_vector_contents_unique(sample_name_vec);
     //check_vector_contents_unique(index1_vec);
     //check_vector_contents_unique(index2_vec);
@@ -101,18 +121,20 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
 }
 
 
-
 fn check_vector_contents_unique(vector1: Vec<String>){
 
 
     for i in &vector1 {
-        println!("{}", i);
+        //println!("{}", i);
     }
 
     //let mut sorted_vector = vector1.clone();
-    let mut sorted_vector = vector1.clone();
-    //sorted_vector = sorted_vector.sort();
-    //println!("Len: {} ", sorted_vector.len());
+    //let mut sorted_vector: Vec<String> = vector1.clone();
+    let mut sorted_vector = Vec::<String>::new();
+    //sorted_vector = vector1.sort();
+    //sorted_vector.sort();
+    println!("VectorLen: {} ", vector1.len());
+    println!("SortedLen: {} ", sorted_vector.len());
 
     // a sorted vector has had all duplicates removed, so we can check by length. 
     // if the sorted vector is shorter, then dups have been removed.
@@ -171,10 +193,10 @@ fn make_field_checks(field: String, record_string: String, mut errors_found: u16
     //assert!(field == "Sample_ID");
     if field == "Sample_ID" {
         unsafe{ 
-            sample_id_count = sample_id_count +  1;
-            if sample_id_count > 1 {
+            SAMPLE_ID_COUNT = SAMPLE_ID_COUNT +  1;
+            if SAMPLE_ID_COUNT > 1 {
                 println!("");
-                println!("ERROR: Sample_ID header present more than once: {}, {}, {:?}", sample_id_count, field, record_string);
+                println!("ERROR: Sample_ID header present more than once: {}, {}, {:?}", SAMPLE_ID_COUNT, field, record_string);
                 println!("Line containing error: {:?}", record_string);
                 println!("See help at http://hpc-web1.mh-hannover.local/doku.php?id=samplesheet");
                 println!("");
@@ -229,7 +251,7 @@ fn main() {
 
         parser.parse_args_or_exit();
     } 
-    let mut input_csv: String = str::to_string(&input_file);
+    let input_csv: String = str::to_string(&input_file);
 
     ////////////////
     // Parse and check the CSV
