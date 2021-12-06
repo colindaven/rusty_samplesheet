@@ -16,7 +16,8 @@ static mut SAMPLE_ID_COUNT : u16 = 0;
 // Check a SampleSheet CSV file for multiple common lab errors. 
 // Does not check duplicate indices or similar.
 fn version() ->  String {
-    let version: String = str::to_string("0.24");
+    let version: String = str::to_string("0.25");
+    //0.25 - use hashes to check dups in Data fields. Working version.
     //0.24 - parse Sample_ID and Sample_Name fields. Check separately for duplication.
     //0.23 - improve error msgs, allow date to contain "."
     //0.22 - add windows batch file
