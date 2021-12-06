@@ -28,6 +28,7 @@ chmod a+x validate_samplesheet
 - Incorrect headers, eg Sample_ID present more than once
 - Incorrect adapters lines with more than three """ (should be something like "Index Adapters,""TruSeq DNA CD Indexes (96 Indexes)""" )
 - Semicolons ; used instead of commas , as delimiters
+- [Data] section - duplicate Sample_Name strings, Sample_ID strings, duplicate indices. 
 
 ## Compile for Windows (done on hpc03 internally)
 ```
