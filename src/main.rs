@@ -113,41 +113,10 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
 
     }
 
-    //check_vector_contents_unique(sample_id_vec);
-    //check_vector_contents_unique(sample_name_vec);
-    //check_vector_contents_unique(index1_vec);
-    //check_vector_contents_unique(index2_vec);
 
     Ok(())
 }
 
-
-fn check_vector_contents_unique(vector1: Vec<String>){
-
-
-    for i in &vector1 {
-        //println!("{}", i);
-    }
-
-    //let mut sorted_vector = vector1.clone();
-    //let mut sorted_vector: Vec<String> = vector1.clone();
-    let mut sorted_vector = Vec::<String>::new();
-    //sorted_vector = vector1.sort();
-    //sorted_vector.sort();
-    println!("VectorLen: {} ", vector1.len());
-    println!("SortedLen: {} ", sorted_vector.len());
-
-    // a sorted vector has had all duplicates removed, so we can check by length. 
-    // if the sorted vector is shorter, then dups have been removed.
-    if sorted_vector.len() < vector1.len(){
-        println!("Duplicates were found in the following list!");
-        println!("{:?}",vector1);
-        for i in &vector1 {
-            //println!("{}", i);
-        }
-    } 
-
-} 
 
 fn make_field_checks(field: String, record_string: String, mut errors_found: u16) -> u16 {
 
