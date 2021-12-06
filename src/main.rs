@@ -64,7 +64,7 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
 
             } 
             if read_into_hashes{
-                // parse columns to check for duplicates into hashes
+                // parse columns 0,1,5,7 to check for duplicates into hashes
                 if i == 0 {
                     if sample_id_hash.contains(&field_str) {
                         println!("Duplicate string found!: {} ", field_str);

@@ -37,7 +37,9 @@ sudo apt update && sudo apt install mingw-w64
 
 # now setup rust
 rustup target add x86_64-pc-windows-gnu
+rustup target add i686-pc-windows-gnu
 rustup toolchain install stable-x86_64-pc-windows-gnu
+rustup toolchain install i686-pc-windows-gnu
 
 # now add this to rust cargo.toml in your project directory:
 
