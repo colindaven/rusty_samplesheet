@@ -14,7 +14,7 @@ A windows/linux program written in Rust
 Windows: 
 1. Call your SampleSheet `SampleSheet.csv` (Windows, set this in the `validate_samplesheet.bat` if you like). 
 2. Double click the `validate_samplesheet.bat`
-3. Results will be printed in output.txt, open this with Wordpad or Notepad++ or another competent text editor.  
+3. Results will be printed in `output.txt`, open this with Wordpad or Notepad++ or another competent text editor.  
 
 Linux: 
 ```
