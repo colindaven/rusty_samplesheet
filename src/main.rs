@@ -16,7 +16,8 @@ static mut SAMPLE_ID_COUNT : u16 = 0;
 // Check a SampleSheet CSV file for multiple common lab errors. 
 // Does not check duplicate indices or similar.
 fn version() ->  String {
-    let version: String = str::to_string("0.25");
+    let version: String = str::to_string("0.26");
+    //0.26 - check and warn about quotes at start of every line
     //0.25 - use hashes to check dups in Data fields. Working version.
     //0.24 - parse Sample_ID and Sample_Name fields. Check separately for duplication.
     //0.23 - improve error msgs, allow date to contain "."
@@ -240,6 +241,8 @@ fn main() {
         println!("Summary: ");
         println!("There were one or more errors while running check_csv: {}", err);
         println!("You can probably solve this by opening in Libreoffice or Excel and deleting the unused whitespace columns, then saving as CSV again.");
+        println!("It was perhaps also a problem with quotes, which cause problems parsing");
+        println!("Add an extra comma to the Index Kit line -which allows quotes - to allow proper parsing!");
         process::exit(1);
     }
 
