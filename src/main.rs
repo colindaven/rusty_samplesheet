@@ -57,7 +57,13 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
 
             let field_str = field.to_string();
             if field.starts_with('\"') {
-                println!("Warning: field {} starts with a quote, check your file in Notepad++ or Wordpad NOT notepad.", field);
+                if field.contains("Index Kit"){
+                    // This is expected!
+                }  
+                else {
+                    println!("Warning: field {} starts with a quote, check your file in Notepad++ or Wordpad NOT notepad.", field);
+                } 
+                
             }
 
             // Only read fields from SampleSheet into hashes after the Data field appears.
