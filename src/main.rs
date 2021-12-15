@@ -56,8 +56,11 @@ fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
         for field in record.iter() {
 
             let field_str = field.to_string();
+            if field.starts_with('\"') {
+                println!("Warning: field {} starts with a quote, check your file in Notepad++ or Wordpad NOT notepad.", field);
+            }
 
-            // Only read fields from SampleSheet after the Data field appears.
+            // Only read fields from SampleSheet into hashes after the Data field appears.
             if field.contains("[Data]"){
                 read_into_hashes = true;
                 println!("Checking data section of SampleSheet. IDs, Names, Indices must be unique!");
