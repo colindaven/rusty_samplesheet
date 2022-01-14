@@ -9,6 +9,16 @@ A windows/linux program written in Rust
 - link to examples showing properly formatted SampleSheets (internal MHH network only at present)
 
 
+## Installation
+
+Just clone or download the repository. The binary executables (eg exe for Windows) are directly in the repository.
+```
+git clone https://github.com/colindaven/rusty_samplesheet
+```
+
+We anticipate most users will run the tool under Windows.
+
+
 
 ## Run it!
 Windows: 
