@@ -1,6 +1,6 @@
 [package]
 name = "validate_samplesheet"
-version = "0.0.26"
+version = "0.0.27"
 authors = ["Colin Davenport"]
 edition = "2018"
 

@@ -62,7 +62,10 @@ linker = "/usr/bin/i686-w64-mingw32-gcc"
 rustflags = "-C panic=abort"
 
 # build 
-cargo rustc --target=i686-pc-windows-gnu --release -- -C link-args=-mwindows
+# Scripted in copy_built_release.sh for Linux and Windows
+bash copy_built_release.sh
+#cargo rustc --target=i686-pc-windows-gnu --release -- -C link-args=-mwindows
+#cargo rustc --target=stable-i686-pc-windows-gnu --release -- -C link-args=-mwindows
 #You can build your crate easily with
 cargo build --target x86_64-pc-windows-gnu
 

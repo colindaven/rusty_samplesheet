@@ -4,6 +4,7 @@ extern crate argparse;
 use argparse::{ArgumentParser, Store};
 use std::error::Error;
 use csv::Reader;
+use csv::ReaderBuilder;
 //use csv::StringRecord;
 //use std::collections::HashMap; 
 use std::process;
@@ -16,7 +17,8 @@ static mut SAMPLE_ID_COUNT : u16 = 0;
 // Check a SampleSheet CSV file for multiple common lab errors. 
 // Does not check duplicate indices or similar.
 fn version() ->  String {
-    let version: String = str::to_string("0.26");
+    let version: String = str::to_string("0.27");
+    //0.27 - flexible csv reader to ignore many number of trailing comma errors (just whitespace)
     //0.26 - check and warn about quotes at start of every line
     //0.25 - use hashes to check dups in Data fields. Working version.
     //0.24 - parse Sample_ID and Sample_Name fields. Check separately for duplication.
@@ -32,9 +34,11 @@ fn version() ->  String {
 
 fn check_csv(csv_file_string: String) -> Result<(), Box<dyn Error>> {
 
-    // Setup file and read
-    //let mut rdr = Reader::from_path("SampleSheet_2020_032049.csv")?;
-    let mut rdr = Reader::from_path(csv_file_string)?;
+    // Setup flexible file reader and read. Flexible since 0.27 ignores comma errors on missing columns
+    //let mut rdr = Reader::from_path(csv_file_string)?;
+    let mut rdr = ReaderBuilder::new()
+        .flexible(true)
+        .from_path(csv_file_string)?;
     let mut sample_id_hash = Vec::<String>::new();
     let mut sample_name_hash = Vec::<String>::new();
     let mut index1_hash = Vec::<String>::new();
