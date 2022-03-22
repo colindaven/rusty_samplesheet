@@ -41,6 +41,36 @@ chmod a+x validate_samplesheet
 - [Data] section - duplicate Sample_Name strings, Sample_ID strings, duplicate indices.
 - Should check for " in lines, but this is difficult since parsing fails. 
 
+
+## What output is given if everything is ok ? Very little, i.e. no specific lines are mentioned.
+
+```
+INFO: Welcome to Rusty Samplesheet version 0.27 by Colin Davenport
+Usage: Call your SampleSheet SampleSheet.csv in the same directory. Double click the .bat file to start.
+Remember to use Wordpad or Notepad++ to read the output.txt file
+If this file appears empty, the tools didn't find any errors - good job!
+Checking data section of SampleSheet. IDs, Names, Indices must be unique!
+```
+
+## What output is produced if faulty lines are present ?
+
+One line shows a single duplicated text string is present, eg this index is duplicated by mistake.
+
+The second error shows an illegal semicolon was found
+
+```
+INFO: Welcome to Rusty Samplesheet version 0.27 by Colin Davenport
+Usage: Call your SampleSheet SampleSheet.csv in the same directory. Double click the .bat file to start.
+Remember to use Wordpad or Notepad++ to read the output.txt file
+If this file appears empty, the tools didn't find any errors - good job!
+Checking data section of SampleSheet. IDs, Names, Indices must be unique!
+Duplicate string found!: CGTATTCG 
+
+ERROR: Semicolon ; illegal found, Only commas ',' should be used! Exiting. Field: ;
+Line containing error: "leer 4leer41D01S709TTTACGGTCTS575GCAATGGA;"
+```
+
+
 ## Compile for Windows (done on hpc03 internally)
 ```
 # first setup Ubuntu
