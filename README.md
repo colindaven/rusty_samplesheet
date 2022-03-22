@@ -55,6 +55,7 @@ Checking data section of SampleSheet. IDs, Names, Indices must be unique!
 ## What output is produced if faulty lines are present ?
 
 One line shows a single duplicated text string is present, eg this index is duplicated by mistake.
+
 The second error shows an illegal semicolon was found
 
 ```
